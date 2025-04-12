@@ -1,9 +1,7 @@
-use std::{env, fs};
+use std::{env, fs, path::PathBuf};
 
-pub fn parse_request(request_line: &str) -> HttpResponse {
-    //TODO: this will be done through a config option later.
+pub fn parse_request(request_line: &str, base_path: &PathBuf) -> HttpResponse {
     println!("{request_line}");
-    let base_path = env::current_dir().unwrap();
 
     let (method, uri) = match parse_http_request_line(request_line) {
         Some(s) => s,
