@@ -1,6 +1,7 @@
 use std::io::{BufRead, BufReader, Write};
 use std::net::{TcpListener, TcpStream};
 use std::path::PathBuf;
+use std::sync::Arc;
 use webby::http::parse_request;
 use webby::threading::ThreadPool;
 
@@ -8,12 +9,13 @@ fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
     let pool = ThreadPool::new(4);
     //We're fine with exiting if there is no PWD at the moment.
-    let base_path = std::env::current_dir().unwrap();
+    let base_path = Arc::new(std::env::current_dir().unwrap());
 
     for stream in listener.incoming() {
+        let base_path = Arc::clone(&base_path);
         match stream {
             Ok(tcp_stream) => {
-                pool.execute(|| {
+                pool.execute(move || {
                     handle_connection(tcp_stream, &base_path);
                 });
             }
