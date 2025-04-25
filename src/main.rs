@@ -1,15 +1,27 @@
 use std::io::{BufRead, BufReader, Write};
 use std::net::{TcpListener, TcpStream};
 use std::path::PathBuf;
+use std::process::ExitCode;
 use std::sync::Arc;
 use webby::http::parse_request;
 use webby::threading::ThreadPool;
 
-fn main() {
-    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+fn main() -> ExitCode {
+    match init() {
+        Ok(_) => ExitCode::SUCCESS,
+        Err(e) => {
+            eprintln!("{:?}", e);
+            ExitCode::from(5)
+        }
+    }
+}
+
+fn init() -> Result<(), std::io::Error> {
+    let listener = TcpListener::bind("127.0.0.1:3")?;
+
     let pool = ThreadPool::new(4);
     //We're fine with exiting if there is no PWD at the moment.
-    let base_path = Arc::new(std::env::current_dir().unwrap());
+    let base_path = Arc::new(std::env::current_dir()?);
 
     for stream in listener.incoming() {
         let base_path = Arc::clone(&base_path);
@@ -19,12 +31,13 @@ fn main() {
                     handle_connection(tcp_stream, &base_path);
                 });
             }
-            Err(e) => println!("Parsing incoming stream failed {}", &e),
+            Err(e) => println!("error parsing tcp stream: {}", e),
         };
     }
     println!("{:?}", base_path);
 
     println!("Shutting down.");
+    Ok(())
 }
 
 fn handle_connection(mut stream: TcpStream, base_path: &PathBuf) {
