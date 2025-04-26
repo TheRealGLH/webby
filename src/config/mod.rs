@@ -1,23 +1,47 @@
+const DEFAULT_PORT: u16 = 7676;
 pub fn print_help() {
-    println!("usage: webby [-p <port>] <base_dir>")
+    println!("usage: webby [-p <port>] [-d <base_dir>]")
 }
 
 pub struct Configuration {
     pub directory: String,
-    pub print_help: bool,
+    pub help: bool,
     pub port: u16,
 }
 
 impl Configuration {
-    pub fn build(mut args: impl Iterator<Item = String>) -> Self {
+    pub fn build(args: impl Iterator<Item = String>) -> Result<Self, String> {
         let mut directory = String::from(".");
-        let mut print_help = false;
-        let port: u16 = 7676;
+        let mut help = false;
+        let mut port: u16 = DEFAULT_PORT;
         //TODO: parse the args iterator for our potential overrides
-        Self {
-            directory,
-            print_help,
-            port,
+        let mut tmp = args;
+        while let Some(argument) = tmp.next() {
+            if argument == "-h" || argument == "--help" {
+                help = true;
+                break;
+            }
+            match argument.as_str() {
+                "-h" | "--help" => {
+                    help = true;
+                }
+                "-p" => {
+                    if let Some(next_arg) = tmp.next() {
+                        port = str::parse::<u16>(next_arg.as_str()).unwrap_or(DEFAULT_PORT);
+                    }
+                }
+                "-d" => {
+                    if let Some(next_arg) = tmp.next() {
+                        directory = next_arg;
+                    }
+                }
+                _ => {}
+            }
         }
+        Ok(Self {
+            directory,
+            help,
+            port,
+        })
     }
 }

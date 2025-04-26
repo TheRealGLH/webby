@@ -10,7 +10,7 @@ use std::sync::Arc;
 use threading::ThreadPool;
 
 pub fn init(config: Configuration) -> Result<(), std::io::Error> {
-    if config.print_help {
+    if config.help {
         print_help();
         return Ok(());
     }

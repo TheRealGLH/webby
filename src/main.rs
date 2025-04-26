@@ -1,9 +1,14 @@
 use std::{env, process::ExitCode};
 
 use webby::config::Configuration;
+use webby::config::print_help;
 
 fn main() -> ExitCode {
-    let config = Configuration::build(env::args());
+    let config = Configuration::build(env::args()).unwrap_or_else(|e| {
+        eprintln!("Error while parsing command arguments: {e:?}");
+        print_help();
+        std::process::exit(4);
+    });
     match webby::init(config) {
         Ok(_) => ExitCode::SUCCESS,
         Err(e) => {
