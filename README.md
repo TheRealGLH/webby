@@ -12,6 +12,7 @@ Originally based on the final project in the online book ['The Rust Programming 
 
 ```sh
 cargo build
+```
 ```sh
 webby [-p <port>] [-d <base_dir>]
 ```
