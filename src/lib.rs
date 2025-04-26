@@ -16,7 +16,7 @@ pub fn init(config: Configuration) -> Result<(), std::io::Error> {
     }
     let addr = SocketAddr::from(([127, 0, 0, 1], config.port));
     let listener = TcpListener::bind(addr)?;
-    println!("Starting server on: {}", addr);
+    println!("Starting server on: http://{}", addr);
 
     let pool = ThreadPool::new(4);
     let base_path = Arc::new(std::fs::canonicalize(PathBuf::from(config.directory))?);
