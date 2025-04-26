@@ -1,4 +1,4 @@
-use std::{env, fs, path::PathBuf};
+use std::{fs, path::PathBuf};
 
 pub fn parse_request(request_line: &str, base_path: &PathBuf) -> HttpResponse {
     println!("{request_line}");
