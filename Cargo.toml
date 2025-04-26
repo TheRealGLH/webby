@@ -2,5 +2,7 @@
 name = "webby"
 version = "0.1.0"
 edition = "2021"
+license = "GPL-3.0-only"
+description = "A no-nonsense web server for quick deployments and testing"
 
 [dependencies]
