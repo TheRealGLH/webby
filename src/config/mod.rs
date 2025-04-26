@@ -1,6 +1,6 @@
 const DEFAULT_PORT: u16 = 7676;
 pub fn print_help() {
-    println!("usage: webby [-p <port>] [-d <base_dir>]")
+    println!("usage: webbington [-p <port>] [-d <base_dir>]")
 }
 
 pub struct Configuration {

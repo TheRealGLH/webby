@@ -1,7 +1,7 @@
 use std::{env, process::ExitCode};
 
-use webby::config::Configuration;
-use webby::config::print_help;
+use webbington::config::Configuration;
+use webbington::config::print_help;
 
 fn main() -> ExitCode {
     let config = Configuration::build(env::args()).unwrap_or_else(|e| {
@@ -9,7 +9,7 @@ fn main() -> ExitCode {
         print_help();
         std::process::exit(4);
     });
-    match webby::init(config) {
+    match webbington::init(config) {
         Ok(_) => ExitCode::SUCCESS,
         Err(e) => {
             eprintln!("{:?}", e);
