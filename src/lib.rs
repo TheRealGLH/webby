@@ -4,7 +4,7 @@ mod threading;
 use config::*;
 use http::parse_request;
 use std::io::{BufRead, BufReader, Write};
-use std::net::{TcpListener, TcpStream};
+use std::net::{SocketAddr, TcpListener, TcpStream};
 use std::path::PathBuf;
 use std::sync::Arc;
 use threading::ThreadPool;
@@ -14,7 +14,9 @@ pub fn init(config: Configuration) -> Result<(), std::io::Error> {
         print_help();
         return Ok(());
     }
-    let listener = TcpListener::bind("127.0.0.1:0")?;
+    let addr = SocketAddr::from(([127, 0, 0, 1], config.port));
+    let listener = TcpListener::bind(addr)?;
+    println!("Starting server on: {}", addr);
 
     let pool = ThreadPool::new(4);
     //We're fine with exiting if there is no PWD at the moment.
