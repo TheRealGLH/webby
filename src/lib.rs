@@ -19,9 +19,9 @@ pub fn init(config: Configuration) -> Result<(), std::io::Error> {
     println!("Starting server on: {}", addr);
 
     let pool = ThreadPool::new(4);
-    //We're fine with exiting if there is no PWD at the moment.
-    let base_path = Arc::new(std::env::current_dir()?);
+    let base_path = Arc::new(std::fs::canonicalize(PathBuf::from(config.directory))?);
 
+    println!("Base path: {:?}", base_path);
     for stream in listener.incoming() {
         let base_path = Arc::clone(&base_path);
         match stream {
@@ -33,7 +33,6 @@ pub fn init(config: Configuration) -> Result<(), std::io::Error> {
             Err(e) => println!("error parsing tcp stream: {}", e),
         };
     }
-    println!("{:?}", base_path);
 
     println!("Shutting down.");
     Ok(())

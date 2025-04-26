@@ -11,7 +11,7 @@ pub struct Configuration {
 
 impl Configuration {
     pub fn build(args: impl Iterator<Item = String>) -> Result<Self, String> {
-        let mut directory = String::from(".");
+        let mut path = String::from(".");
         let mut help = false;
         let mut port: u16 = DEFAULT_PORT;
         //TODO: parse the args iterator for our potential overrides
@@ -32,14 +32,14 @@ impl Configuration {
                 }
                 "-d" => {
                     if let Some(next_arg) = tmp.next() {
-                        directory = next_arg;
+                        path = next_arg;
                     }
                 }
                 _ => {}
             }
         }
         Ok(Self {
-            directory,
+            directory: path,
             help,
             port,
         })
